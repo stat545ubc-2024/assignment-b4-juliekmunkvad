@@ -1,0 +1,137 @@
+---
+title: "Option A"
+output: html_document
+---
+
+I have chosen option A for assignment B4. To accomplish the tasks in this assignment, several R packages are loaded, each providing specific functionalities.
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(janeaustenr)
+library(tidytext)
+library(ggplot2)
+library(testthat)
+```
+
+### Exercise 1
+
+```{r janeausten}
+
+book <- emma
+
+# Tokenize the book text
+book_words <- book %>%
+  as_tibble() %>%
+  unnest_tokens(word, value)
+
+# Remove stopwords
+data("stop_words")
+cleaned_words <- book_words %>%
+  anti_join(stop_words, by = "word")
+
+# Count the most frequent words
+word_counts <- cleaned_words %>%
+  count(word, sort = TRUE)
+
+```
+
+Next, the 20 most common words (beyond the stop words) are plotted to inspect the frequency.
+```{r plot}
+#Plot of the top 20 words
+word_counts %>%
+  slice_max(n, n = 20) %>%
+  ggplot(aes(x = reorder(word, n), y = n)) +
+  geom_col() +
+  coord_flip() +
+  labs(
+    title = "The 20 most common words in the novel 'Emma' by Jane Austen",
+    x = "Words",
+    y = "Frequency"
+  ) +
+  theme_minimal()
+
+
+```
+
+### Exercise 2
+
+#### Creation of function
+
+```{r}
+#' Convert words to custom Pig Latin
+#'
+#' This function takes a word and converts it into a custom Pig Latin format following the rules stated under details.
+#'
+#' @param word A string representing the input word to be converted.
+#' @return A string representing the word in custom Pig Latin format.
+#' 
+#' @details The custom Pig Latin rules implemented in the function are the following:
+#' - If the word starts with a vowel (a, e, i, o, u), the first letter is moved to the end.
+#' - If the word starts with a consonant, the entire word is reversed.
+#' - After the rearrangement, the length of the word (in characters) is appended.
+#' 
+#' @examples
+#' convert_to_custom_pig_latin("apple")  # Returns "pplea5"
+#' convert_to_custom_pig_latin("banana") # Returns "ananab6"
+#' convert_to_custom_pig_latin("egg")    # Returns "gge3"
+#'
+#' @export
+convert_to_pig_latin <- function(word) {
+  #Input checks
+  if (!is.character(word) || length(word) != 1) {
+    stop("Input must be a single string.")
+  }
+  
+  #Detect if the first character is a vowel
+  vowels <- c("a", "e", "i", "o", "u")
+  first_char <- substr(word, 1, 1)
+  
+  if (tolower(first_char) %in% vowels) {
+    #If the word starts with a vowel, move the first letter to the end
+    modified_word <- str_c(substr(word, 2, nchar(word)), first_char)
+  } else {
+    #If the word starts with a consonant, reverse the word
+    modified_word <- str_c(rev(strsplit(word, "")[[1]]), collapse = "")
+  }
+  
+  #Append the length of the word in number
+  pig_latin_word <- str_c(modified_word, nchar(word))
+  
+  return(pig_latin_word)
+}
+```
+
+#### Examples of function
+Next, a series of examples are conducted on the created function `convert_to_pig_latin`.
+
+```{r, error=TRUE}
+#Examples
+convert_to_pig_latin("apple")  # "pplea5"
+convert_to_pig_latin("banana") # "ananab6"
+convert_to_pig_latin("egg")    # "gge3"
+convert_to_pig_latin("test")   # "tset4"
+
+```
+
+#### Test of function
+Finally, I perform formal tests on the `convert_to_pig_latin` function using the `testthat` package. These tests evaluate the function under various conditions to ensure it behaves as expected. Specifically, the tests check how the function handles single characters, edge cases (such as empty strings, strings containing numbers, and strings with special characters), and scenarios where the function is expected to throw an error with the message: "Input must be a single string."
+
+```{r}
+test_that("convert_to_custom_pig_latin handles single characters", {
+  expect_equal(convert_to_pig_latin("a"), "a1")           
+  expect_equal(convert_to_pig_latin("z"), "z1")           
+})
+
+test_that("convert_to_custom_pig_latin handles edge cases", {
+  expect_equal(convert_to_pig_latin(""), "0")              
+  expect_equal(convert_to_pig_latin("12345"), "543215")   
+  expect_equal(convert_to_pig_latin("!@#$"), "$#@!4")
+})
+
+test_that("convert_to_custom_pig_latin throws an error for invalid inputs", {
+  expect_error(convert_to_pig_latin(NULL), "Input must be a single string.")
+  expect_error(convert_to_pig_latin(123), "Input must be a single string.")
+  expect_error(convert_to_pig_latin(c("apple", "banana")), "Input must be a single string.")
+})
+
+```
