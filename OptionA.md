@@ -1,11 +1,11 @@
----
-title: "Assignment B4: Option A"
-output: github_document
----
+Assignment B4: Option A
+================
 
-I have chosen option A for assignment B4. To accomplish the tasks in this assignment, several R packages are loaded, each providing specific functionalities.
+I have chosen option A for assignment B4. To accomplish the tasks in
+this assignment, several R packages are loaded, each providing specific
+functionalities.
 
-```{r setup, echo = TRUE, message = FALSE, warning = FALSE}
+``` r
 library(tidyverse)
 library(janeaustenr)
 library(tidytext)
@@ -14,16 +14,25 @@ library(testthat)
 ```
 
 ### Exercise 1
-In this exercise, I analyze Jane Austen's novel "Emma" using the `janeaustenr` and `tidytext` packages to identify and explore the 20 most common words in the novel, excluding stopwords.
+
+In this exercise, I analyze Jane Austen’s novel “Emma” using the
+`janeaustenr` and `tidytext` packages to identify and explore the 20
+most common words in the novel, excluding stopwords.
 
 ### R Packages Used:
-- `janeaustenr`: Provides the complete texts of Jane Austen's novels in a format ready for text analysis. I selected the book "Emma" from this package for my analysis.  
-  Source: [janeaustenr on CRAN](https://cran.r-project.org/package=janeaustenr)
-- `tidytext`: Enables text mining with a tidy data frame approach. It offers tools for tokenization and removing stopwords, which are essential for this analysis.  
-  Source: [tidytext on CRAN](https://cran.r-project.org/package=tidytext)
 
-```{r janeausten}
+- `janeaustenr`: Provides the complete texts of Jane Austen’s novels in
+  a format ready for text analysis. I selected the book “Emma” from this
+  package for my analysis.  
+  Source: [janeaustenr on
+  CRAN](https://cran.r-project.org/package=janeaustenr)
+- `tidytext`: Enables text mining with a tidy data frame approach. It
+  offers tools for tokenization and removing stopwords, which are
+  essential for this analysis.  
+  Source: [tidytext on
+  CRAN](https://cran.r-project.org/package=tidytext)
 
+``` r
 #Load the book "Emma" from janeaustenr
 book <- austen_books() %>%
   filter(book == "Emma")
@@ -39,12 +48,12 @@ cleaned_words <- book_words %>%
 #Count the most frequent words in the cleaned text
 word_counts <- cleaned_words %>%
   count(word, sort = TRUE)
-
 ```
 
-Next, the 20 most common words, excluding stopwords, are plotted to inspect the frequency in the novel "Emma".
+Next, the 20 most common words, excluding stopwords, are plotted to
+inspect the frequency in the novel “Emma”.
 
-```{r plot}
+``` r
 #Plot of the top 20 words
 word_counts %>%
   slice_max(n, n = 20) %>%
@@ -57,25 +66,36 @@ word_counts %>%
     y = "Frequency"
   ) +
   theme_minimal()
-
 ```
 
-This bar chart shows the 20 most common words in Jane Austen's novel "Emma", excluding stopwords. The names "Emma," "Miss," and "Harriet" are the 3 most dominating, highlighting the central characters and themes in the novel, which revolve around personal relationships, social hierarchies, and interpersonal dynamics.
+![](OptionA_files/figure-gfm/plot-1.png)<!-- -->
+
+This bar chart shows the 20 most common words in Jane Austen’s novel
+“Emma”, excluding stopwords. The names “Emma,” “Miss,” and “Harriet” are
+the 3 most dominating, highlighting the central characters and themes in
+the novel, which revolve around personal relationships, social
+hierarchies, and interpersonal dynamics.
 
 ### Exercise 2
-In this exercise, I create a custom function to convert a word into a modified version of Pig Latin. The function is tested using examples and formal test cases to ensure it behaves as expected.
+
+In this exercise, I create a custom function to convert a word into a
+modified version of Pig Latin. The function is tested using examples and
+formal test cases to ensure it behaves as expected.
 
 #### Creation of function
-The function `convert_to_pig_latin` takes a single word as input and applies the following rules:
 
-- If the word starts with a vowel (a, e, i, o, u), the first letter is moved to the end.
+The function `convert_to_pig_latin` takes a single word as input and
+applies the following rules:
+
+- If the word starts with a vowel (a, e, i, o, u), the first letter is
+  moved to the end.
 - If the word starts with a consonant, the word is reversed.
-- In both cases, the string _545STAT_ is appended to the end.
+- In both cases, the string *545STAT* is appended to the end.
 
-Additionally, the function includes error handling to ensure only valid inputs are processed.
+Additionally, the function includes error handling to ensure only valid
+inputs are processed.
 
-
-```{r}
+``` r
 #' Convert words to custom Pig Latin
 #' 
 #' This function takes a word and converts it into a custom Pig Latin format following the rules stated under details.
@@ -113,36 +133,70 @@ convert_to_pig_latin <- function(word) {
 ```
 
 #### Examples of function
-Here, I demonstrate the `convert_to_pig_latin` function with examples to show how it handles different inputs.
 
-```{r, error=TRUE}
+Here, I demonstrate the `convert_to_pig_latin` function with examples to
+show how it handles different inputs.
+
+``` r
 #Examples
 convert_to_pig_latin("apple")  # "pplea545STAT"
-convert_to_pig_latin("banana") # "ananab545STAT"
-convert_to_pig_latin("egg")    # "gge545STAT"
-convert_to_pig_latin("test")   # "tset545STAT"
-
 ```
 
-#### Test of function
-Finally, I perform formal tests on the `convert_to_pig_latin` function using the `testthat` package. These tests evaluate the function under various conditions to ensure it behaves as expected. Specifically, the tests check how the function handles single characters, edge cases (such as empty strings, strings containing numbers, and strings with special characters), and scenarios where the function is expected to throw an error with the message: "Input must be a single string."
+    ## [1] "pplea545STAT"
 
-```{r}
+``` r
+convert_to_pig_latin("banana") # "ananab545STAT"
+```
+
+    ## [1] "ananab545STAT"
+
+``` r
+convert_to_pig_latin("egg")    # "gge545STAT"
+```
+
+    ## [1] "gge545STAT"
+
+``` r
+convert_to_pig_latin("test")   # "tset545STAT"
+```
+
+    ## [1] "tset545STAT"
+
+#### Test of function
+
+Finally, I perform formal tests on the `convert_to_pig_latin` function
+using the `testthat` package. These tests evaluate the function under
+various conditions to ensure it behaves as expected. Specifically, the
+tests check how the function handles single characters, edge cases (such
+as empty strings, strings containing numbers, and strings with special
+characters), and scenarios where the function is expected to throw an
+error with the message: “Input must be a single string.”
+
+``` r
 test_that("convert_to_custom_pig_latin handles single characters", {
   expect_equal(convert_to_pig_latin("a"), "a545STAT")           
   expect_equal(convert_to_pig_latin("z"), "z545STAT")           
 })
+```
 
+    ## Test passed 🎉
+
+``` r
 test_that("convert_to_custom_pig_latin handles edge cases", {
   expect_equal(convert_to_pig_latin(""), "545STAT")              
   expect_equal(convert_to_pig_latin("12345"), "54321545STAT")   
   expect_equal(convert_to_pig_latin("!@#$"), "$#@!545STAT")
 })
+```
 
+    ## Test passed 😀
+
+``` r
 test_that("convert_to_custom_pig_latin throws an error for invalid inputs", {
   expect_error(convert_to_pig_latin(NULL), "Input must be a single string.")
   expect_error(convert_to_pig_latin(123), "Input must be a single string.")
   expect_error(convert_to_pig_latin(c("apple", "banana")), "Input must be a single string.")
 })
-
 ```
+
+    ## Test passed 😀
