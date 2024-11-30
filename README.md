@@ -3,8 +3,9 @@
 This repository contains Option A for Assignment B4 completed as part of the STAT 545B coursework. It includes the `.Rmd` and `.md` files for exercises 1 and 2, as well as a folder containing the generated plot for Option A.
 
 ## **The project covers**
-Exercise 1: Analysis of textual data from Jane Austen's novel "Emma".
-Exercise 2: Implementation of a custom function for transforming text using "Pig Latin" rules, including examples and tests for its correctness.
+
+- **Exercise 1:** Analysis of textual data from Jane Austen's novel "Emma".
+- **Exercise 2:** Implementation of a custom function for transforming text using "Pig Latin" rules, including examples and tests for its correctness.
 
 ---
 
@@ -48,4 +49,4 @@ install.packages("testthat")
     ```
 - Open the `OptionA.Rmd` file in RStudio.
 - Install the required packages above (if not already installed).
-- Knit the .Rmd file to reproduce the analysis and outputs.
+- Knit the `.Rmd` file to reproduce the analysis and outputs.
